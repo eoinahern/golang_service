@@ -1,0 +1,13 @@
+mysql> create table DailyWeather (name VARCHAR(50), summary VARCHAR(100), icon
+VARCHAR(100), sunriseTime INT, sunsetTime INT, precipProbability FLOAT(5,2), te
+mperatureMin FLOAT(5,2),temperatureMinTime INT, temperatureMax FLOAT(5,2), temp
+eratureMaxTime INT, apparentTemperatureMaxTime INT, dewPoint FLOAT(5,2), windSp
+eed FLOAT(5,2), humidity FLOAT(3,2), pressure FLOAT(5,2) , cloudCover FLOAT(3,2
+));
+
+ ALTER TABLE DailyWeather ADD COLUMN time INT;
+
+mysql> Create Table City (name VARCHAR(50), latitude DECIMAL(11,8), longitude D
+ECIMAL(11,8));
+
+ ALTER TABLE City ADD PRIMARY KEY(name)
