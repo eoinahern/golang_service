@@ -3,7 +3,7 @@ package entities
 
 
 
-func NewCity(){
+func NewCity() (*City) {
 	city := new(City)
 	return city
 }
@@ -11,9 +11,9 @@ func NewCity(){
 
 
 type City struct {
-	name string
-	latitude float64
-	longitude float64
+	name string 	`json:"name"`
+	latitude float64 	`json :"latitude"`
+	longitude float64	`json: "longitude"`
 }
 
 
