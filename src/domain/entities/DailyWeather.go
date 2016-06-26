@@ -7,26 +7,28 @@ func NewDailyWeather() *DailyWeather {
 
 type DailyWeather struct {
 
-  time int
-  summary string
-  icon string
-  sunriseTime int
-  sunsetTime int
-  precipProbability float32
-  temperatureMin float32
-  temperatureMinTime int
-  temperatureMax float32
-  temperatureMaxTime int
-  apparentTemperatureMaxTime int
-  dewPoint float32
-  windSpeed float32
-  humidity float32
-  pressure float32
-  cloudCover float32
+  
+  Name string `json: "name"`
+  Time int      `json:"time"`
+  Summary string `json:"summary"`
+  Icon string	`json:"icon"`
+  SunriseTime int `json:"sunriseTime"`
+  SunsetTime int  `json:"sunsetTime"`
+  PrecipProbability float32 `json:"precipProbability"`
+  TemperatureMin float32 `json:"temperatureMin"`
+  TemperatureMinTime int `json:"temperatureMinTime"`
+  TemperatureMax float32	`json:"temperatureMax"`
+  TemperatureMaxTime int	`json:"temperatureMaxTime"`
+  ApparentTemperatureMaxTime int	`json:"apparentTemperatureMaxTime"`
+  DewPoint float32	`json:"dewPoint"`
+  WindSpeed float32	`json:"windSpeed"`
+  Humidity float32	`json:"humidity"`
+  Pressure float32	`json:"pressure"`
+  CloudCover float32	`json:"cloudCover"`
 }
 
 func (w *DailyWeather) getTime() int {
-    return w.time
+    return w.Time
 }
 
 

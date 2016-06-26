@@ -4,29 +4,31 @@ import (
 	
 	"net/http"
 	"github.com/gin-gonic/gin"
+	"domain/model"
+
 )
 
 
 type Router struct {
-
-	 ginrouter *gin.Engine
-	 routergroup *gin.RouterGroup
+	 Ginrouter *gin.Engine
+	 Routergroup *gin.RouterGroup
 }
 
 
 func NewRouter() *Router {
 	
 	r := new(Router)
-	r.ginrouter = gin.Default()
-	r.routergroup = r.ginrouter.Group("api/v1")
+	r.Ginrouter = gin.Default()
+	r.Routergroup = r.Ginrouter.Group("api/v1")
 	{
-		r.routergroup.GET("/:id", GetCity)
-		r.routergroup.DELETE("/", notImplemented)
-		r.routergroup.POST("/", notImplemented)
-		r.routergroup.PUT("/", notImplemented)
+		r.Routergroup.GET("/:id", GetCity)
+		
+		r.Routergroup.DELETE("/", notImplemented)
+		r.Routergroup.POST("/", notImplemented)
+		r.Routergroup.PUT("/", notImplemented)
 	}
 	
-	r.ginrouter.Run(":8000")
+	r.Ginrouter.Run(":8080")
 	return r;
 }
 
@@ -35,9 +37,18 @@ func notImplemented(c *gin.Context) {
 	c.JSON(http.StatusNotImplemented, gin.H{"error" : "method not Implemented"})
 }
 
-func GetCity( c *gin.Context){
+func  GetCity(c *gin.Context){
+	 
 	 city := c.Param("id")
-	 c.String(http.StatusOK, "found :", city)
+	 dbconn := model.NewDatabase("eoin", "pass","weather_app") 
+	 citydao := model.NewCityDAO(dbconn)
+	 citydata := citydao.Get(city)
+	 
+	 if(len(citydata) < 1){
+	 	c.JSON(http.StatusNotFound, gin.H{"error" : "not found"})
+	 } else {
+	 	 c.JSON(http.StatusOK,   gin.H{"cities" : citydata})
+	 }
 }
 
 
