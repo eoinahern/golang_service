@@ -7,7 +7,7 @@ import (
 	
 )
 
-func newDailyWeatherDAO(dbconnin Database) *DailyWeatherDAO {
+func NewDailyWeatherDAO(dbconnin *Database) *DailyWeatherDAO {
 	d_weather := new(DailyWeatherDAO)
 	//dbconn := dbconnin
 	return d_weather
@@ -21,8 +21,13 @@ type DailyWeatherDAO struct {
 
 
 
-func (dw *DailyWeatherDAO) Insert(){
-	//insert json objs to ddb
+func (dw *DailyWeatherDAO) Insert(weatheritems []entities.DailyWeather){
+	//insert objs to ddb
+	
+	/*for _, val := range weatheritems {
+		
+		
+	}*/
 }
 
 

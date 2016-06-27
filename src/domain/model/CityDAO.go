@@ -30,7 +30,7 @@ func (dw *CityDAO) Delete(cityid string){
 	
 }
 
-func (dw *CityDAO) Get(cityid string) ([]entities.City) {
+func (dw *CityDAO) GetByCity(cityid string) ([]entities.City) {
 	
 	 rows, err := dw.dbconn.mydbconn.Query("SELECT name, latitude, longitude FROM city WHERE name = ?;", cityid)
 	 
@@ -40,13 +40,32 @@ func (dw *CityDAO) Get(cityid string) ([]entities.City) {
 	 }
 	 
 	 defer rows.Close()
-	 newrows := createJson(rows)
+	 newrows := createEntities(rows)
 	 rows.Close()
 	 return newrows
 }
 
 
-func  createJson(rows *sql.Rows) ([]entities.City){
+func (dw *CityDAO) GetAllCities()([]entities.City){
+	
+	 rows, err := dw.dbconn.mydbconn.Query("SELECT * FROM city;")
+	 
+	 if err != nil {
+		 	println( "error calling query")
+			log.Fatal(err)
+	 }
+	 
+	 defer rows.Close()
+	 newrows := createEntities(rows)
+	 rows.Close()
+	 return newrows
+}
+
+
+
+
+
+func  createEntities(rows *sql.Rows) ([]entities.City){
 	
 	data :=  make([]entities.City,0) 
 	for rows.Next(){

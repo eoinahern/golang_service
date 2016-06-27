@@ -42,7 +42,7 @@ func  GetCity(c *gin.Context){
 	 city := c.Param("id")
 	 dbconn := model.NewDatabase("eoin", "pass","weather_app") 
 	 citydao := model.NewCityDAO(dbconn)
-	 citydata := citydao.Get(city)
+	 citydata := citydao.GetByCity(city)
 	 
 	 if(len(citydata) < 1){
 	 	c.JSON(http.StatusNotFound, gin.H{"error" : "not found"})
