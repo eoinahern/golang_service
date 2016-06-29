@@ -4,30 +4,59 @@ import (
 	"domain/entities"
 	"database/sql"
 	"log"
+	"strings"
+	"fmt"
 	
 )
 
 func NewDailyWeatherDAO(dbconnin *Database) *DailyWeatherDAO {
 	d_weather := new(DailyWeatherDAO)
-	//dbconn := dbconnin
+	d_weather.dbconn = dbconnin
 	return d_weather
 	
 }
 
 type DailyWeatherDAO struct {
-	dbconn Database
+	dbconn *Database
 	
 }
 
-
-
-func (dw *DailyWeatherDAO) Insert(weatheritems []entities.DailyWeather){
-	//insert objs to ddb
+func (dw *DailyWeatherDAO) Insert(weatheritems []*entities.DailyWeather){
 	
-	/*for _, val := range weatheritems {
+	keyStrings := make([]string,  17)
+	values := make([]interface{}, 0)
+	
+	for _, weatherval := range weatheritems {
 		
+		keyStrings = append(keyStrings, `(?, ?, ?,
+		 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
 		
-	}*/
+		values = append(values, weatherval.Name)
+		values = append(values, weatherval.Time)
+		values = append(values, weatherval.Summary)
+		values = append(values, weatherval.Icon)
+		values = append(values, weatherval.SunriseTime)
+		values = append(values, weatherval.SunsetTime)
+		values = append(values, weatherval.PrecipProbability)
+		values = append(values, weatherval.TemperatureMin)
+		values = append(values, weatherval.TemperatureMinTime)
+		values = append(values, weatherval.TemperatureMax)
+		values = append(values, weatherval.TemperatureMaxTime)
+		values = append(values, weatherval.ApparentTemperatureMaxTime)
+		values = append(values, weatherval.DewPoint)
+		values = append(values, weatherval.WindSpeed)
+		values = append(values, weatherval.Humidity)
+		values = append(values, weatherval.Pressure)
+		values = append(values, weatherval.CloudCover)
+		
+	}
+		
+		stmt := fmt.Sprintf(`INSERT into dailyweather () VALUES %s`, strings.Join(keyStrings, ","))
+		 _, err := dw.dbconn.mydbconn.Exec(stmt, values...)
+		 
+		 if(err != nil){
+		 	println("data not inserted")
+		 }
 }
 
 
@@ -38,8 +67,7 @@ func (dw *DailyWeatherDAO) Delete(){
 
 func (dw *DailyWeatherDAO) Get(city string) ([]entities.DailyWeather){
 	
-	
-	 rows, err := dw.dbconn.mydbconn.Query("SELECT * FROM dailyweather WHERE name = ?;", city)
+	rows, err := dw.dbconn.mydbconn.Query("SELECT * FROM dailyweather WHERE name = ?;", city)
 	 
 	 if err != nil {
 		 	println( "error calling query")
