@@ -7,24 +7,26 @@ import (
 	"net/http"
 	"strconv"
 	"encoding/json"
+	"io/ioutil"
 )
 
 //1.call external service for each city in my db!!
 //2. data for each call returns json obj
+
+type Fullapi struct {
+		Dailydata entities.DailyWeatherContainer `json:"daily"`
+}
 
 func LoadServiceDataPerCity(){
 	
 	var apikey string = "63f0914cdd082e76d25b40161cbe70c4"
 	dbconn := model.NewDatabase("eoin", "pass","weather_app");
 	citydao := model.NewCityDAO(dbconn)
+	//dailyweatherslice = [][] entities.DailyWeather
 	dailyweatherdao := model.NewDailyWeatherDAO(dbconn);
 	cities := citydao.GetAllCities()
-	dailyweatherslice := make([]*entities.DailyWeather, 0)
 	
 	for _, cityval := range cities {
-		
-		//call external service forecast.io
-		//can only call 1 lat, long at a time
 		
 		lat := strconv.FormatFloat(cityval.Latitude,'E',8,64)
 		longit := strconv.FormatFloat(cityval.Longitude,'E',8,64)
@@ -37,16 +39,20 @@ func LoadServiceDataPerCity(){
 		}
 		 
 		 defer resp.Body.Close()
-		 
-		 //need to loop as there are multiple items.
-		 
-		 dailyweather := entities.NewDailyWeather()
-		 json.NewDecoder(resp.Body).Decode(dailyweather);
-		 dailyweatherslice = append(dailyweatherslice, dailyweather)
+		 dailyweather := unmarshallData(resp)
+		 dailyweatherslice = append(dailyweatherslice, dailyweather.Dailydata.Dw)   // is a slice. iterate over these
 		 resp.Body.Close()
 	}
 	
-	InsertData(dailyweatherslice,dailyweatherdao)
+	//InsertData(,dailyweatherdao)
+}
+
+func unmarshallData(resp *http.Response)  *Fullapi {
+	
+		 dailyweather := new(Fullapi)
+		 body, _ := ioutil.ReadAll(resp.Body)
+		 json.Unmarshal(body, &dailyweather)
+		 return dailyweather
 }
 
 
@@ -55,6 +61,11 @@ func LoadServiceDataPerCity(){
 func InsertData(dailyweather []*entities.DailyWeather, weatherdao *model.DailyWeatherDAO){
 	weatherdao.Insert(dailyweather)
 }
+
+
+
+
+
 
 
 
